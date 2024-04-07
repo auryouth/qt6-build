@@ -1,9 +1,17 @@
-name: MSYS2
+name: Build Qt6
 on: push
+env:
+  RELEASE_TAG: packages
 
 jobs:
-  msys2-ucrt64:
+  build:
     runs-on: windows-latest
+    permissions: write-all
+    strategy:
+      fail-fast: false
+      matrix: 
+        pkg: [ qt6-base ]
+        version: [ 6.7.0 ]
     defaults:
       run:
         shell: msys2 {0}
@@ -13,9 +21,8 @@ jobs:
         with:
           msystem: UCRT64
           update: true
-          install: mingw-w64-ucrt-x86_64-gcc ninja
-      - name: CI-Build
+          install: git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja mingw-w64-ucrt-x86_64-python
+      - name: Build
         run: |
-          gcc -v
-          gcc -v -E -
-          cmake --version
+          _pkgfn = ${{matrix.pkg/6-/}}
+          git clone -b v${{ matrix.version }}  https://code.qt.io/qt/${_pkgfn}.git
