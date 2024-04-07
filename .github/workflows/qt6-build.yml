@@ -11,6 +11,6 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: show
-      shell: bash
+      shell: C:\shells\msys2bash.cmd {0}
       run: |
         ls -R
