@@ -11,64 +11,63 @@ jobs:
     permissions: write-all
     strategy:
       fail-fast: false
-      matrix: 
-        pkg: [ qt6-base ]
-        version: [ 6.7.0 ]
+      matrix:
+        pkg: [qt6-base]
+        version: [6.7.0]
     defaults:
       run:
         shell: msys2 {0}
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
           update: true
           install: zip git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja mingw-w64-ucrt-x86_64-python
-      
+
       - name: clone and build
         run: |
           pkg=${{ matrix.pkg }}
           _pkgfn=${pkg/6-/}
           git clone -b v${{ matrix.version }}  https://code.qt.io/qt/${_pkgfn}.git
-          cmake -B build -S $_pkgfn -G Ninja -DCMAKE_INSTALL_PREFIX=~
-          cmake --build build --parallel
-      
+          cmake -B build -S $_pkgfn -G Ninja -DCMAKE_INSTALL_PREFIX=~/${{ matrix.pkg }}
+          cmake --build build --parallel 4
+
       - name: package
         run: |
-          DESTDIR=~/${{ matrix.pkg }} cmake --install build
+          cmake --install build
           zip -r ${{ matrix.pkg }}-${{ matrix.version }}.zip ~/${{ matrix.pkg }}
-      
+
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
-          name:  ${{ matrix.pkg }}-${{ matrix.version }}
+          name: ${{ matrix.pkg }}-${{ matrix.version }}
           path: |
-             ${{ matrix.pkg }}-${{ matrix.version }}.zip
-  
+            ${{ matrix.pkg }}-${{ matrix.version }}.zip
+
   Upload-Release:
     permissions: write-all
     if: ${{ github.ref_type=='tag' }}
     needs: [build]
     runs-on: windows-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-        
-    - uses: actions/download-artifact@v4
-      with:
-        path: bin/
-        merge-multiple: true
-    
-    - name: Display structure of downloaded files
-      run: ls -R
-      working-directory: bin
-    
-    - name: Upload Release
-      uses: softprops/action-gh-release@v2
-      if: ${{  success() }}
-      with:
-        tag_name: ${{ github.ref_name }}
-        files: bin/*
-        generate_release_notes: true
-      
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: bin/
+          merge-multiple: true
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: bin
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v2
+        if: ${{  success() }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: bin/*
+          generate_release_notes: true
