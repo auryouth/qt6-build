@@ -13,4 +13,4 @@ jobs:
     - name: show
       shell: bash
       run: |
-        ls -R C:\msys64
+        ls -R
