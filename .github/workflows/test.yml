@@ -1,0 +1,29 @@
+name: Test
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions: write-all
+    strategy:
+      fail-fast: false
+      matrix: 
+        pkg: [ qt6-base ]
+        version: [ 6.7.0 ]
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: zip git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja mingw-w64-ucrt-x86_64-python
+      
+      - name: test
+        run: |
+          cd ~
+          pwd
