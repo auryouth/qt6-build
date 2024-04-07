@@ -24,5 +24,5 @@ jobs:
           install: git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja mingw-w64-ucrt-x86_64-python
       - name: Build
         run: |
-          _pkgfn = ${{matrix.pkg/6-/}}
+          _pkgfn = ${{ matrix.pkg/6-/ }}
           git clone -b v${{ matrix.version }}  https://code.qt.io/qt/${_pkgfn}.git
