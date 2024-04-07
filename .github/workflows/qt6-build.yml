@@ -13,4 +13,5 @@ jobs:
     - name: show
       shell: C:\shells\msys2bash.cmd {0}
       run: |
-        ls -R
+        gcc -v
+        which gcc
