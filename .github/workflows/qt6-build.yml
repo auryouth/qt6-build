@@ -31,13 +31,13 @@ jobs:
           pkg=${{ matrix.pkg }}
           _pkgfn=${pkg/6-/}
           git clone -b v${{ matrix.version }}  https://code.qt.io/qt/${_pkgfn}.git
-          cmake -B build -S $_pkgfn -G Ninja -DCMAKE_INSTALL_PREFIX=.
-          cmake --build build
+          cmake -B build -S $_pkgfn -G Ninja -DCMAKE_INSTALL_PREFIX=~
+          cmake --build build --parallel
       
       - name: package
         run: |
-          DESTDIR=${{ matrix.pkg }} cmake --install build
-          zip -r ${{ matrix.pkg }}-${{ matrix.version }}.zip ./${{ matrix.pkg }}
+          DESTDIR=~/${{ matrix.pkg }} cmake --install build
+          zip -r ${{ matrix.pkg }}-${{ matrix.version }}.zip ~/${{ matrix.pkg }}
       
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
