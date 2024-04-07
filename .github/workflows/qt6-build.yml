@@ -13,7 +13,9 @@ jobs:
         with:
           msystem: UCRT64
           update: true
+          install: mingw-w64-ucrt-x86_64-gcc ninja
       - name: CI-Build
         run: |
           gcc -v
           gcc -v -E -
+          cmake --version
