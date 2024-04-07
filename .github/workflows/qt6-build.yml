@@ -1,17 +1,19 @@
-name: Build Qt6
-
-on:
-  push:
+name: MSYS2
+on: push
 
 jobs:
-  build:
+  msys2-ucrt64:
     runs-on: windows-latest
-
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
-    - uses: actions/checkout@v4
-
-    - name: show
-      shell: C:\shells\msys2bash.cmd {0}
-      run: |
-        gcc -v
-        which gcc
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+      - name: CI-Build
+        run: |
+          gcc -v
+          gcc -v -E -
