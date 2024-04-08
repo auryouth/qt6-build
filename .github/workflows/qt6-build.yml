@@ -41,13 +41,15 @@ jobs:
             mingw-w64-ucrt-x86_64-ninja
             mingw-w64-ucrt-x86_64-python
             mingw-w64-ucrt-x86_64-qt6
+            mingw-w64-ucrt-x86_64-assimp
 
       - name: clone and build
         run: |
           pkg=${{ matrix.pkg }}
           _pkgfn=${pkg/6-/}
           git clone -b v${{ matrix.version }}  https://code.qt.io/qt/${_pkgfn}.git
-          if [ -f ${_pkgfn}/.gitmodules ];then
+          cd ${_pkgfn}
+          if [ -f .gitmodules ];then
               git submodule update --init --recursive
           fi
           cmake -B build -S $_pkgfn -G Ninja -DCMAKE_INSTALL_PREFIX=${{ matrix.pkg }}
