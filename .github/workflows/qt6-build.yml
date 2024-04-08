@@ -48,11 +48,10 @@ jobs:
           pkg=${{ matrix.pkg }}
           _pkgfn=${pkg/6-/}
           git clone -b v${{ matrix.version }}  https://code.qt.io/qt/${_pkgfn}.git
-          cd ${_pkgfn}
-          if [ -f .gitmodules ];then
-              git submodule update --init --recursive
+          if [ -f ${_pkgfn}/.gitmodules ];then
+              git -C ${_pkgfn} submodule update --init --recursive
           fi
-          cmake -B build -G Ninja -DCMAKE_INSTALL_PREFIX=${{ matrix.pkg }}
+          cmake -B build -S ${_pkgfn} -G Ninja -DCMAKE_INSTALL_PREFIX=${{ matrix.pkg }}
           cmake --build build --parallel 4
 
       - name: package
