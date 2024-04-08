@@ -12,7 +12,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pkg: [qt6-base qt6-tools qt6-svg qt6-webengine qt6-declarative qt6-quick3d qt6-serialport]
+        pkg:
+          [
+            qt6-base,
+            qt6-tools,
+            qt6-svg,
+            qt6-webengine,
+            qt6-declarative,
+            qt6-quick3d,
+            qt6-serialport,
+          ]
         version: [6.7.0]
     defaults:
       run:
