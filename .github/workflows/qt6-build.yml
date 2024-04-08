@@ -52,7 +52,7 @@ jobs:
           if [ -f .gitmodules ];then
               git submodule update --init --recursive
           fi
-          cmake -B build -S $_pkgfn -G Ninja -DCMAKE_INSTALL_PREFIX=${{ matrix.pkg }}
+          cmake -B build -G Ninja -DCMAKE_INSTALL_PREFIX=${{ matrix.pkg }}
           cmake --build build --parallel 4
 
       - name: package
